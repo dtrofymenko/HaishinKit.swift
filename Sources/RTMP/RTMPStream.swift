@@ -560,8 +560,14 @@ open class RTMPStream: NetStream {
         }
     }
 
+    open var userDefinedMetadata: [String: Any?]?
     func createMetaData() -> ASObject {
         metadata.removeAll()
+         if let userDefinedMetadata = self.userDefinedMetadata {
+            for (key, value) in userDefinedMetadata {
+               metadata[key] = value
+            }
+         }
 #if os(iOS) || os(macOS)
         if let _:AVCaptureInput = mixer.videoIO.input {
             metadata["width"] = mixer.videoIO.encoder.width
