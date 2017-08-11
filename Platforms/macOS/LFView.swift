@@ -3,6 +3,15 @@ import AVFoundation
 
 open class LFView: NSView {
     public static var defaultBackgroundColor:NSColor = NSColor.black
+    fileprivate var snapshotCallback: ((CIImage?) -> ())?
+
+    public func snapshot(callback aCallback: @escaping (CIImage?) -> ()) {
+       guard nil != self.currentStream else {
+         aCallback(nil)
+         return
+       }
+       self.snapshotCallback = aCallback
+    }
 
     public var videoGravity:String = AVLayerVideoGravityResizeAspect {
         didSet {
@@ -21,6 +30,9 @@ open class LFView: NSView {
 
     private weak var currentStream:NetStream? {
         didSet {
+            self.snapshotCallback?(nil)
+            self.snapshotCallback = nil
+
             guard let oldValue:NetStream = oldValue else {
                 return
             }
@@ -61,5 +73,7 @@ open class LFView: NSView {
 extension LFView: NetStreamDrawable {
     // MARK: NetStreamDrawable
     func draw(image:CIImage) {
+      self.snapshotCallback?(image)
+      self.snapshotCallback = nil
     }
 }
