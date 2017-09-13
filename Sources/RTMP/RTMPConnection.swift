@@ -159,6 +159,9 @@ open class RTMPConnection: EventDispatcher {
         get { return socket.timeout }
         set { socket.timeout = newValue }
     }
+    /// Interval to use when detecting insufficient bandwidth (in seconds)
+    open var measureInterval:Int = 3
+   
     /// The name of application.
     open var flashVer:String = RTMPConnection.defaultFlashVer
     /// The outgoing RTMPChunkSize.
@@ -222,7 +225,6 @@ open class RTMPConnection: EventDispatcher {
     fileprivate var messages:[UInt16:RTMPMessage] = [:]
     fileprivate var arguments:[Any?] = []
     fileprivate var currentChunk:RTMPChunk? = nil
-    fileprivate var measureInterval:Int = 3
     fileprivate var fragmentedChunks:[UInt16:RTMPChunk] = [:]
     fileprivate var previousTotalBytesIn:Int64 = 0
     fileprivate var previousTotalBytesOut:Int64 = 0
