@@ -483,6 +483,10 @@ extension RTMPConnection: RTMPSocketDelegate {
         if (chunk.type == .two) {
             position = chunk.append(data, message: messages[chunk.streamId])
         }
+      
+        if (nil == fragmentedChunks[chunk.streamId] && chunk.type == .three) {
+            position = chunk.append(data, message: messages[chunk.streamId])
+        }
 
         if let message:RTMPMessage = chunk.message, chunk.ready {
             if (logger.isEnabledFor(level: .trace)) {

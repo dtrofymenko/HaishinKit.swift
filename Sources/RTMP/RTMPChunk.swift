@@ -244,7 +244,11 @@ final class RTMPChunk {
         do {
             self.message = RTMPMessage.create(message.type.rawValue)
             self.message?.streamId = message.streamId
-            self.message?.timestamp = try buffer.readUInt24()
+            if case .two = self.type {
+               self.message?.timestamp = try buffer.readUInt24()
+            } else if case .three = self.type {
+               self.message?.timestamp = message.timestamp
+            }
             self.message?.length = message.length
             self.message?.payload = Data(try buffer.readBytes(message.length))
         } catch {
