@@ -236,7 +236,7 @@ open class RTMPStream: NetStream {
                 currentFPS = 0
                 frameCount = 0
                 info.clear()
-                qosDelegate?.clear()
+                qosDelegate?.clear(self, withConnection: self.rtmpConnection)
             case .playing:
                 mixer.audioIO.playback.startRunning()
                 mixer.startPlaying()
